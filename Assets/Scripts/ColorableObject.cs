@@ -41,10 +41,10 @@ public class ColorableObject : MonoBehaviour
         foreach (var material in materials)
         {
             //Enable shader keywords so they can be changed later
-           material.EnableKeyword("_PaintedTex");
-           material.EnableKeyword("_Color");
-
-           //material.SetTexture("_PaintedTex", drawableTexture);
+            material.EnableKeyword("_PaintedTex");
+            material.EnableKeyword("_Color");
+            material.EnableKeyword("_Mix");
+            //material.SetTexture("_PaintedTex", drawableTexture);
         }
 
         ColorGun.Instance.colorChannelEvent.AddListener(OnChangedColorGun);
@@ -70,8 +70,10 @@ public class ColorableObject : MonoBehaviour
         foreach (var material in materials)
         {
             if (color == desiredColorasColor && showTrueColorOnCorrectChannel)
+            {
                 material.SetColor("_Color", Color.white);
-            else 
+            }
+            else
                 material.SetColor("_Color", ShaderColorMultiplier);
         }
 
@@ -84,6 +86,7 @@ public class ColorableObject : MonoBehaviour
         foreach (var material in materials)
         {
             material.SetColor("_Color", Color.white);
+            material.SetFloat("_Mix", 0.0f);
         }
     }
     protected void ShowRGBColor()
@@ -93,6 +96,7 @@ public class ColorableObject : MonoBehaviour
         foreach (var material in materials)
         {
             material.SetColor("_Color", ShaderColorMultiplier);
+            material.SetFloat("_Mix", 0.5f);
         }
     }
 }
