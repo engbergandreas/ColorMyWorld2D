@@ -29,11 +29,22 @@ public class Player : MonoBehaviour
         respawnPoint = point;
     }
 
+    public void PlayerHitByEnemy(Vector2 force)
+    {
+        GetComponent<Rigidbody2D>().AddForce(force, ForceMode2D.Impulse);
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        Invoke("Kill", 3.0f);
+
+    }
+
     public void Kill()
     {
         transform.position = respawnPoint;
-        GetComponent<Rigidbody>().velocity = Vector3.zero;
-        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        GetComponent<Rigidbody2D>().angularVelocity = 0;
+        GetComponent<BoxCollider2D>().enabled = true;
+        GetComponent<CircleCollider2D>().enabled = true;
         Debug.Log("TODO: Remove life");
     }
 }
