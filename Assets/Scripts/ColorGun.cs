@@ -71,27 +71,22 @@ public class ColorGun : MonoBehaviour
     /// </summary>
     private void CheckIntersectingObjectsBetweenPlayerAndMouse()
     {
-        crosshair.color = new Color(0, 0, 0, 0.2f);
+        Color c = crosshair.color;
+        c.a = 0.2f;
+        crosshair.color = c;
         crosshair.rectTransform.eulerAngles = new Vector3(0, 0, 0);
 
 
         lr.SetPosition(0, Vector3.zero);
         lr.SetPosition(1, Vector3.zero);
-        lr.startColor = Color.red;
-        lr.endColor = Color.red;
+
 
         RaycastHit2D rayMouseToWorld = Physics2D.GetRayIntersection(_cam.ScreenPointToRay(Input.mousePosition));
-        if (!rayMouseToWorld)
+        if (!rayMouseToWorld || rayMouseToWorld.transform.tag == "Player")
             return;
-
         
         Vector3 hitPoint = rayMouseToWorld.point;
         Vector3 dir = hitPoint - fireGunPosition.position;
-
-        //RaycastHit2D rayPlayerToMouse = Physics2D.Raycast(fireGunPosition.position, dir.normalized);
-        //if (!rayPlayerToMouse)
-        //    return;
-
 
         //Filter raycast to not include player 
         ContactFilter2D filter = new ContactFilter2D { useTriggers = true };
@@ -100,21 +95,33 @@ public class ColorGun : MonoBehaviour
         Physics2D.Raycast(fireGunPosition.position, dir.normalized, filter, hits, 40.0f);
 
         RaycastHit2D rayPlayerToMouse = hits[0]; //Take the first hit -> closest obj hit
-        if (!rayPlayerToMouse)
-            return; 
 
-        lr.SetPosition(0, fireGunPosition.position);
-        lr.SetPosition(1, rayPlayerToMouse.point);
-
+        var objmousehit = rayMouseToWorld.transform.GetComponent<DrawableObject>();
         var interceptedObj = rayPlayerToMouse.transform.GetComponent<DrawableObject>();
-        if(interceptedObj)
+
+        if((interceptedObj && interceptedObj == objmousehit) || rayPlayerToMouse.transform.GetComponent<WalkableSurface>())
         {
-            crosshair.color = new Color(0, 0, 0, 1);
-            float deg = 60.0f;
-            float speed = 4.0f;
-            crosshair.rectTransform.eulerAngles = new Vector3(0, 0, Mathf.Sin(Time.time * speed) * deg );
+            lr.SetPosition(0, fireGunPosition.position);
+            lr.SetPosition(1, hitPoint);
             lr.startColor = Color.cyan;
             lr.endColor = Color.cyan;
+        }
+        else
+        {
+            lr.SetPosition(0, fireGunPosition.position);
+            lr.SetPosition(1, rayPlayerToMouse.point);
+            lr.startColor = Color.red;
+            lr.endColor = Color.red;
+        }
+
+        if(objmousehit)
+        {
+            c.a = 1.0f;
+            crosshair.color = c;
+
+            float deg = 15.0f;
+            float speed = 4.0f;
+            crosshair.rectTransform.eulerAngles = new Vector3(0, 0, Mathf.Sin(Time.time * speed) * deg );
         }
     }
 
@@ -153,8 +160,12 @@ public class ColorGun : MonoBehaviour
             if (!info)
                 return;
 
-            DrawableObject interception = info.transform.gameObject.GetComponent<DrawableObject>();
-            if (interception && interception == objectHit) //Is it the same drawable object that we clicked on then fire the gun
+            DrawableObject interception = info.transform.GetComponent<DrawableObject>();
+
+            if (!interception)
+                return;
+
+            if (interception == objectHit || info.transform.GetComponent<WalkableSurface>()) //Is it the same drawable object that we clicked on then fire the gun
             {
                 Vector3 hitPoint = _cam.WorldToScreenPoint(hitinfo.point);
                 objectHit.ColorTarget(hitPoint, color, _cam, GetRandomSplatterMask());
@@ -183,7 +194,7 @@ public class ColorGun : MonoBehaviour
         //{
         //    obj.OnChannelChange(channel);
         //}
-
+        crosshair.color = color;
         rgbChannelEvent.Invoke(channel);
         colorChannelEvent.Invoke(color);
     }
