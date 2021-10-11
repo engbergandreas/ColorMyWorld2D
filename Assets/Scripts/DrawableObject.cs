@@ -19,15 +19,16 @@ public class DrawableObject : ColorableObject
 
     protected bool canGivePoints = true;
     private int textureSize = 64;
-    private MeshRenderer meshRenderer;
-
+    //private MeshRenderer meshRenderer;
+    private SpriteRenderer spriteRenderer;
 
     protected override void Start()
     {
         base.Start();
         //Setup drawable texture properties
         float grayscale = 0.2f;
-        meshRenderer = GetComponent<MeshRenderer>();
+        //meshRenderer = GetComponent<MeshRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         drawableTexture = new Texture2D(textureSize, textureSize);
         drawableTexture.wrapMode = TextureWrapMode.Clamp;
 
@@ -36,9 +37,10 @@ public class DrawableObject : ColorableObject
         {
             for (int j = 0; j < drawableTexture.height; j++)
             {
-                Color c = ColorGun.Instance.RGBChannelToColor(desiredColor);
-                c *= 0.2f;
-                drawableTexture.SetPixel(i, j, c);
+                Color showdesiredcoloronstart = ColorGun.Instance.RGBChannelToColor(desiredColor);
+                showdesiredcoloronstart *= 0.2f;
+                Color grayScale = new Color(grayscale, grayscale, grayscale);
+                drawableTexture.SetPixel(i, j, grayScale);
             }
         }
         drawableTexture.Apply();
@@ -59,8 +61,8 @@ public class DrawableObject : ColorableObject
     /// <param name="_cam"></param>
     public void ColorTarget(Vector3 hitPoint, Color color, Camera _cam, Texture2D mask)
     {
-        Vector3 planeMin = _cam.WorldToScreenPoint(meshRenderer.bounds.min);
-        Vector3 planeMax = _cam.WorldToScreenPoint(meshRenderer.bounds.max);
+        Vector3 planeMin = _cam.WorldToScreenPoint(spriteRenderer.bounds.min);
+        Vector3 planeMax = _cam.WorldToScreenPoint(spriteRenderer.bounds.max);
 
         float xProportion = Mathf.InverseLerp(planeMin.x, planeMax.x, hitPoint.x);
         float yProportion = Mathf.InverseLerp(planeMin.y, planeMax.y, hitPoint.y);
@@ -119,12 +121,14 @@ public class DrawableObject : ColorableObject
                 if (j < 0 || j >= drawableTexture.height)
                     continue;
 
+                //Get u,v coordinates of the mask scaled to 0 -> mask width
                 int u = (int) Mathf.Floor(((float)i - (x - r)) / (2 * r) * mask.width);
                 int v = (int) Mathf.Floor(((float)j - (y - r)) / (2 * r) * mask.height);
                 
-
+                //invert mask color, obs grayscale mask
                 float maskColor = 1 - mask.GetPixel(u, v).r;
-                if (maskColor < 0.2)
+                float threshold = 0.2f;
+                if (maskColor < threshold)
                     continue;
 
                 Color currentColor = drawableTexture.GetPixel(i, j);
