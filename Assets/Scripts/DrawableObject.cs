@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+
+[RequireComponent(typeof(BoxCollider2D))]
 public class DrawableObject : ColorableObject
 {
     public Texture2D drawableTexture;
-    
     /// <summary>
     /// How much of the surface has to be painted before it is accepted as correct
     /// </summary>
@@ -124,7 +125,7 @@ public class DrawableObject : ColorableObject
                 //Get u,v coordinates of the mask scaled to 0 -> mask width
                 int u = (int) Mathf.Floor(((float)i - (x - r)) / (2 * r) * mask.width);
                 int v = (int) Mathf.Floor(((float)j - (y - r)) / (2 * r) * mask.height);
-                
+
                 //invert mask color, obs grayscale mask
                 float maskColor = 1 - mask.GetPixel(u, v).r;
                 float threshold = 0.2f;
