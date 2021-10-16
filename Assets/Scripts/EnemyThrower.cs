@@ -8,6 +8,9 @@ public class EnemyThrower : MonoBehaviour
     const float NOT_FOUND = -1.0f;
 
     public GameObject objTothrow;
+    public Animator animator;
+    public Transform firePoint;
+
     public float timeBetweenAttacks = 5.0f;
     public float projectileSpeed = 10.0f;
     private float timeSinceLastAttack = 0;
@@ -29,37 +32,39 @@ public class EnemyThrower : MonoBehaviour
         }
 
         float sqrt = Mathf.Sqrt(underroot);
-        float a1 = Mathf.Atan2(v * v + sqrt, (g * x));
-        float a2 = Mathf.Atan2(v * v - sqrt, (g * x));
+        float a1 = Mathf.Atan2(v * v + sqrt, (g * x)); //lob
+        float a2 = Mathf.Atan2(v * v - sqrt, (g * x)); //direct
 
-        return Mathf.Abs(y) > 1.0 ? a1 : a2;
+        return Mathf.Abs(y) > 3.0f ? a1 : a2;
     }
 
-    private void ThrowObject()
+    private IEnumerator ThrowObject()
     {
         float angle = ComputeThrowAngle();
-        if (angle == NOT_FOUND)
-            return;
+        if (angle != NOT_FOUND)
+        {
+            animator.SetTrigger("Shoot");
+            yield return new WaitForSeconds(0.5f);
 
-        var obj = Instantiate(objTothrow, transform.position, Quaternion.identity, transform);
-        Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
-
-        Vector2 throwDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-
-
-        rb.velocity = throwDirection * projectileSpeed;
-
-        Destroy(obj, 5.0f);
-
+            var obj = Instantiate(objTothrow, firePoint.position, Quaternion.identity, transform);
+            Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
+            Vector2 throwDirection = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            
+            rb.velocity = throwDirection * projectileSpeed;
+            Destroy(obj, 5.0f);
+            
+        }
     }
     // Update is called once per frame
     void Update()
     {
         if(timeSinceLastAttack <= 0)
         {
-            ThrowObject();
+            StartCoroutine("ThrowObject");
             timeSinceLastAttack = timeBetweenAttacks;
-        }else
+
+        }
+        else
         {
             timeSinceLastAttack -= Time.deltaTime;
         }
