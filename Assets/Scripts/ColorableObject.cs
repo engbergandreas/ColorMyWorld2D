@@ -14,6 +14,9 @@ public class ColorableObject : MonoBehaviour
     protected Color desiredColorasColor;  
     protected Color ShaderColorMultiplier;
     protected Renderer _renderer;
+    /// <summary>
+    /// If static color is true the object does not change color when player changes channel
+    /// </summary>
     protected bool staticColor = false;
     // Start is called before the first frame update
     protected virtual void Start()

@@ -24,7 +24,7 @@ public class Trigger : MonoBehaviour
     {
         if (KillPlayer)
         {
-            onTriggered.AddListener(Player.Instance.Kill);
+            onTriggered.AddListener(Player.Instance.PlayerHitByObject);
         }
     }
 
@@ -36,7 +36,7 @@ public class Trigger : MonoBehaviour
                 return;
         }
 
-        if (other.name == "Player")
+        if (other.tag == "Player")
         {
             onTriggered.Invoke();
             onTriggeredVector.Invoke(transform.position);

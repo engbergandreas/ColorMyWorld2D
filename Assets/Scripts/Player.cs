@@ -22,11 +22,13 @@ public class Player : MonoBehaviour
     {
         Instance = this;
         respawnPoint = GameObject.Find("SpawnPoint").transform.position;
+        transform.position = respawnPoint;
     }
 
     public void SetSpawnPoint(Vector3 point)
     {
         respawnPoint = point;
+        Debug.Log("Update spawnpoint");
     }
 
     public void PlayerHitByEnemy(Vector2 force)
@@ -36,6 +38,14 @@ public class Player : MonoBehaviour
         GetComponent<CircleCollider2D>().enabled = false;
         Invoke("Kill", 3.0f);
 
+    }
+
+    public void PlayerHitByObject()
+    {
+        GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 4.0f), ForceMode2D.Impulse);
+        GetComponent<BoxCollider2D>().enabled = false;
+        GetComponent<CircleCollider2D>().enabled = false;
+        Invoke("Kill", 3.0f);
     }
 
     public void Kill()

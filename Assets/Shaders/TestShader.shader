@@ -48,7 +48,8 @@ Shader "Custom/TestShader"
             // Albedo comes from a texture tinted by color
             fixed4 c = tex2D (_MainTex, IN.uv_MainTex) *  _Color;
 
-			if (c.a < 0.5f)
+			//Don't do any calculations with pixels that are transparent
+			if (c.a < 1e-4f)
 				discard;
 
 			fixed4 color2 = tex2D(_PaintedTex, IN.uv_PaintedTex);

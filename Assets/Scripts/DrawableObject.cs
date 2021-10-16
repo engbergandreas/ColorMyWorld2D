@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class DrawableObject : ColorableObject
 {
     public Texture2D drawableTexture;
+    public SpriteRenderer colorIcon;
     /// <summary>
     /// How much of the surface has to be painted before it is accepted as correct
     /// </summary>
@@ -27,11 +28,14 @@ public class DrawableObject : ColorableObject
     {
         base.Start();
         //Setup drawable texture properties
-        float grayscale = 0.2f;
+        float grayscale = 1.0f;
         //meshRenderer = GetComponent<MeshRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         drawableTexture = new Texture2D(textureSize, textureSize);
         drawableTexture.wrapMode = TextureWrapMode.Clamp;
+
+        if(colorIcon)
+            colorIcon.color = desiredColorasColor;
 
         //Set all pixels to grayscale value
         for (int i = 0; i < drawableTexture.width; i++)
@@ -92,7 +96,8 @@ public class DrawableObject : ColorableObject
             PointSystem.Instance.AddPoints(pointsToGive);
             canGivePoints = false;
             ColorGun.Instance.colorChannelEvent.RemoveListener(OnChangedColorGun); //if it should stay the same color it is when accepted as correct
-
+            staticColor = true;
+            ShowTrueColor();
         }
         _event.Invoke();
     }

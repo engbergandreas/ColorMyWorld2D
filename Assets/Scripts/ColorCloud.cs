@@ -54,6 +54,7 @@ public class ColorCloud : DrawableObject
             canGivePoints = false;
             isShrinking = false;
             //Destroy(gameObject, 5);
+
         }
     }
 }
