@@ -14,6 +14,7 @@ public class DrawableObject : ColorableObject
     [Range(0, 1)]
     public float threshold = 0.70f;
 
+    public int textureSizeMultiplier = 1;
     /// <summary>
     /// Should this object fire any events when completely drawn
     /// </summary>
@@ -29,6 +30,8 @@ public class DrawableObject : ColorableObject
         base.Start();
         //Setup drawable texture properties
         float grayscale = 1.0f;
+        textureSize *= textureSizeMultiplier;
+        threshold /= textureSizeMultiplier;
         //meshRenderer = GetComponent<MeshRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         drawableTexture = new Texture2D(textureSize, textureSize);

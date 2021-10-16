@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desiredColor: 0
-  pointsToGive: 10
+  pointsToGive: 2
   showTrueColorOnCorrectChannel: 0
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 8463240178285869075}
@@ -290,7 +290,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desiredColor: 0
-  pointsToGive: 10
+  pointsToGive: 2
   showTrueColorOnCorrectChannel: 0
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 8463240178285869075}
@@ -421,7 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desiredColor: 0
-  pointsToGive: 10
+  pointsToGive: 2
   showTrueColorOnCorrectChannel: 0
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 8463240178285869075}
@@ -552,7 +552,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desiredColor: 0
-  pointsToGive: 10
+  pointsToGive: 2
   showTrueColorOnCorrectChannel: 0
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 8463240178285869075}
@@ -683,7 +683,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   desiredColor: 0
-  pointsToGive: 10
+  pointsToGive: 2
   showTrueColorOnCorrectChannel: 0
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 8463240178285869075}

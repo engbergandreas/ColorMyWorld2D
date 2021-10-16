@@ -660,7 +660,7 @@ MonoBehaviour:
   showTrueColorOnCorrectChannel: 0
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 1223549044536785145}
-  threshold: 0.3
+  threshold: 0.2
   _event:
     m_PersistentCalls:
       m_Calls: []

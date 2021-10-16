@@ -71,10 +71,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a578e8dfbcac25849a34b92f198a6437, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lifeTime: 1.5
-  reductionScalar: 1
+  lifeTime: 1
   platform: {fileID: 3217957079573660614}
-  timeLeft: 1.5
 --- !u!1001 &9003592243587894722
 PrefabInstance:
   m_ObjectHideFlags: 0
