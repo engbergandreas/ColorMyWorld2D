@@ -36,6 +36,7 @@ public class ColorGun : MonoBehaviour
         lr.startWidth = 0.05f;
         lr.endWidth = 0.05f;
     }
+
     // Update is called once per frame
     void Update()
     {
@@ -46,18 +47,20 @@ public class ColorGun : MonoBehaviour
         if (hasBlue && Input.GetKeyDown(KeyCode.Alpha3))
             ChangeColorGun(RGBChannel.Blue);
 
-
-        if (fireTimer <= 0)
-        {
-            if (continiousFire && Input.GetMouseButton(0)) //can hold down mouse
-                FireGun();
-            else if (Input.GetMouseButtonDown(0)) //single taps only
-                FireGun();
-        }
-        else
-        {
+        if (fireTimer > 0)
             fireTimer -= Time.deltaTime;
-        }
+
+        //if (fireTimer <= 0)
+        //{
+        //    //if (continiousFire && Input.GetMouseButton(0)) //can hold down mouse
+        //    //    FireGun();
+        //    //else if (Input.GetMouseButtonDown(0)) //single taps only
+        //    //    FireGun();
+        //}
+        //else
+        //{
+        //    fireTimer -= Time.deltaTime;
+        //}
 
         RectTransform crosshairRec = crosshair.GetComponent<RectTransform>();
         Vector3 screenMousePos = Input.mousePosition;
@@ -71,41 +74,57 @@ public class ColorGun : MonoBehaviour
     /// </summary>
     private void CheckIntersectingObjectsBetweenPlayerAndMouse()
     {
+        //Set crosshair alpha 
         Color c = crosshair.color;
         c.a = 0.2f;
         crosshair.color = c;
         crosshair.rectTransform.eulerAngles = new Vector3(0, 0, 0);
 
-
+        //Reset line renderer
         lr.SetPosition(0, Vector3.zero);
         lr.SetPosition(1, Vector3.zero);
 
-
+        //Raycast mouseposition 
         RaycastHit2D rayMouseToWorld = Physics2D.GetRayIntersection(_cam.ScreenPointToRay(Input.mousePosition));
         if (!rayMouseToWorld || rayMouseToWorld.transform.tag == "Player")
             return;
         
-        Vector3 hitPoint = rayMouseToWorld.point;
-        Vector3 dir = hitPoint - fireGunPosition.position;
+        Vector3 mouseHitPoint = rayMouseToWorld.point;
+        Vector3 playertoMouseDirection = mouseHitPoint - fireGunPosition.position; 
 
-        //Filter raycast to not include player 
+        //Filter raycast to not include player & ladder
         ContactFilter2D filter = new ContactFilter2D { useTriggers = true };
-        filter.SetLayerMask(~LayerMask.GetMask("Player"));
+        filter.SetLayerMask(~LayerMask.GetMask("Player", "Ladder"));
         List<RaycastHit2D> hits = new List<RaycastHit2D>();
-        Physics2D.Raycast(fireGunPosition.position, dir.normalized, filter, hits, 40.0f);
+        Physics2D.Raycast(fireGunPosition.position, playertoMouseDirection.normalized, filter, hits, 40.0f);
 
-        RaycastHit2D rayPlayerToMouse = hits[0]; //Take the first hit -> closest obj hit
+        RaycastHit2D rayPlayerToMouse = hits[0]; //Take the first hit excluding the player -> closest obj hit
 
         var objmousehit = rayMouseToWorld.transform.GetComponent<DrawableObject>();
         var interceptedObj = rayPlayerToMouse.transform.GetComponent<DrawableObject>();
 
-        if((interceptedObj && interceptedObj == objmousehit) || rayPlayerToMouse.transform.GetComponent<WalkableSurface>())
+        //Object under the mouse is the same as the intercepted object between the player and mouseposition 
+        //If the intercepted object is a walkable surface or a ladder, it counts as correct 
+        //Sets the linerenderer from player to mouse position
+        if ((interceptedObj && interceptedObj == objmousehit) ||
+            rayPlayerToMouse.transform.GetComponent<WalkableSurface>())
         {
             lr.SetPosition(0, fireGunPosition.position);
-            lr.SetPosition(1, hitPoint);
+            lr.SetPosition(1, mouseHitPoint);
             lr.startColor = Color.cyan;
             lr.endColor = Color.cyan;
+            
+            //Can we fire gun?
+            if (fireTimer <= 0)
+            {
+                if (continiousFire && Input.GetMouseButton(0)) //can hold down mouse
+                    FireGun(objmousehit, mouseHitPoint);
+                else if (Input.GetMouseButtonDown(0)) //single taps only
+                    FireGun(objmousehit, mouseHitPoint);
+            }
         }
+        //Another object blocks the ray from player to mouse
+        //Sets the linerender from player to the intercepted object
         else
         {
             lr.SetPosition(0, fireGunPosition.position);
@@ -114,6 +133,7 @@ public class ColorGun : MonoBehaviour
             lr.endColor = Color.red;
         }
 
+        //if the player hovers a drawable surface, wiggle the crosshair 
         if(objmousehit)
         {
             c.a = 1.0f;
@@ -125,53 +145,62 @@ public class ColorGun : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Fires gun from player to mouse location 
-    /// </summary>
-    private void FireGun()
+    private void FireGun(DrawableObject objmousehit, Vector3 mouseHitPoint)
     {
         fireTimer = 1 / fireRate;
 
-        RaycastHit2D hitinfo = Physics2D.GetRayIntersection(_cam.ScreenPointToRay(Input.mousePosition));
-        if (!hitinfo)
-            return;
-
-        //Check we hit drawable target
-        DrawableObject objectHit = hitinfo.transform.gameObject.GetComponent<DrawableObject>();
-
-        if (objectHit)
-        {
-            //Fire a ray from the player towards the mouse in world coordinates
-            //check if the ray intersects any other objects on the path
-            Vector3 worldHitPoint = hitinfo.point;
-            Vector3 dir = worldHitPoint - fireGunPosition.position;
-
-            //RaycastHit2D info = Physics2D.Raycast(fireGunPosition.position, dir.normalized);
-            //if (!info)
-            //    return;
-
-            //Filter raycast to not include player 
-            ContactFilter2D filter = new ContactFilter2D { useTriggers = true };
-            filter.SetLayerMask(~LayerMask.GetMask("Player"));
-            List<RaycastHit2D> hits = new List<RaycastHit2D>();
-            Physics2D.Raycast(fireGunPosition.position, dir.normalized, filter, hits, 40.0f);
-
-            RaycastHit2D info = hits[0]; //Take the first hit -> closest obj hit
-            if (!info)
-                return;
-
-            DrawableObject interception = info.transform.GetComponent<DrawableObject>();
-
-            if (!interception)
-                return;
-
-            if (interception == objectHit || info.transform.GetComponent<WalkableSurface>()) //Is it the same drawable object that we clicked on then fire the gun
-            {
-                Vector3 hitPoint = _cam.WorldToScreenPoint(hitinfo.point);
-                objectHit.ColorTarget(hitPoint, color, _cam, GetRandomSplatterMask());
-            }
-        }
+        Vector3 mouseHitPointScreenCoords = _cam.WorldToScreenPoint(mouseHitPoint);
+        objmousehit.ColorTarget(mouseHitPointScreenCoords, color, _cam, GetRandomSplatterMask());
     }
+
+    /// <summary>
+    /// Fires gun from player to mouse location 
+    /// </summary>
+    //private void FireGun()
+    //{
+    //    fireTimer = 1 / fireRate;
+
+    //    RaycastHit2D hitinfo = Physics2D.GetRayIntersection(_cam.ScreenPointToRay(Input.mousePosition));
+    //    if (!hitinfo)
+    //        return;
+
+    //    //Check we hit drawable target
+    //    DrawableObject objectHit = hitinfo.transform.gameObject.GetComponent<DrawableObject>();
+
+    //    if (objectHit)
+    //    {
+    //        //Fire a ray from the player towards the mouse in world coordinates
+    //        //check if the ray intersects any other objects on the path
+    //        Vector3 worldHitPoint = hitinfo.point;
+    //        Vector3 dir = worldHitPoint - fireGunPosition.position;
+
+    //        //RaycastHit2D info = Physics2D.Raycast(fireGunPosition.position, dir.normalized);
+    //        //if (!info)
+    //        //    return;
+
+    //        //Filter raycast to not include player 
+    //        ContactFilter2D filter = new ContactFilter2D { useTriggers = true };
+    //        filter.SetLayerMask(~LayerMask.GetMask("Player"));
+    //        List<RaycastHit2D> hits = new List<RaycastHit2D>();
+    //        Physics2D.Raycast(fireGunPosition.position, dir.normalized, filter, hits, 40.0f);
+
+    //        RaycastHit2D info = hits[0]; //Take the first hit -> closest obj hit
+    //        if (!info)
+    //            return;
+
+    //        DrawableObject interception = info.transform.GetComponent<DrawableObject>();
+
+    //        if (!interception)
+    //            return;
+
+    //        if (interception == objectHit || info.transform.GetComponent<WalkableSurface>() ||
+    //            info.transform.tag == "Ladder") //Is it the same drawable object that we clicked on then fire the gun
+    //        {
+    //            Vector3 hitPoint = _cam.WorldToScreenPoint(hitinfo.point);
+    //            objectHit.ColorTarget(hitPoint, color, _cam, GetRandomSplatterMask());
+    //        }
+    //    }
+    //}
 
     Texture2D GetRandomSplatterMask()
     {
