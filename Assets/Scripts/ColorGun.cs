@@ -11,6 +11,7 @@ public class ColorGun : MonoBehaviour
     public bool continiousFire;
     public Image crosshair;
     public Transform fireGunPosition;
+    public GameObject colorblob;
     public List<Texture2D> maskList;
     public UnityEvent<RGBChannel> rgbChannelEvent;
     public UnityEvent<Color> colorChannelEvent;
@@ -96,7 +97,11 @@ public class ColorGun : MonoBehaviour
         ContactFilter2D filter = new ContactFilter2D { useTriggers = true };
         filter.SetLayerMask(~LayerMask.GetMask("Player", "Ladder"));
         List<RaycastHit2D> hits = new List<RaycastHit2D>();
+        
         Physics2D.Raycast(fireGunPosition.position, playertoMouseDirection.normalized, filter, hits, 40.0f);
+
+        if (hits.Count == 0)
+            return;
 
         RaycastHit2D rayPlayerToMouse = hits[0]; //Take the first hit excluding the player -> closest obj hit
 
@@ -148,6 +153,9 @@ public class ColorGun : MonoBehaviour
     private void FireGun(DrawableObject objmousehit, Vector3 mouseHitPoint)
     {
         fireTimer = 1 / fireRate;
+
+        var obj = Instantiate(colorblob, fireGunPosition.position, Quaternion.identity);
+        obj.GetComponent<ColorBlobProjectile>().MoveTowardsTarget(mouseHitPoint, objmousehit, color);
 
         Vector3 mouseHitPointScreenCoords = _cam.WorldToScreenPoint(mouseHitPoint);
         objmousehit.ColorTarget(mouseHitPointScreenCoords, color, _cam, GetRandomSplatterMask());

@@ -144,8 +144,14 @@ public class DrawableObject : ColorableObject
                 drawableTexture.SetPixel(i, j, Color.Lerp(currentColor, color, 0.5f) * maskColor);
             }
         }
-        drawableTexture.Apply();
     }
+
+    public void ApplySplatter()
+    {
+        drawableTexture.Apply();
+
+    }
+
     /// <summary>
     /// Calculate how much of the texture is the correct color
     /// </summary>
