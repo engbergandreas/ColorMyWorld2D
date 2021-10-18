@@ -47,7 +47,7 @@ MonoBehaviour:
   objTothrow: {fileID: 115033171177666641, guid: 3b270707ef2276e41bbee12520cec1e1, type: 3}
   animator: {fileID: 5175370512401250343}
   firePoint: {fileID: 803608085313497460}
-  timeBetweenAttacks: 5
+  timeBetweenAttacks: 4
   projectileSpeed: 12
 --- !u!1 &4557173753696475175
 GameObject:
