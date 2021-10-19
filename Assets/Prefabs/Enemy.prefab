@@ -105,6 +105,7 @@ MonoBehaviour:
   drawableTexture: {fileID: 0}
   colorIcon: {fileID: 2501787153694367573}
   threshold: 0.35
+  textureSizeMultiplier: 1
   _event:
     m_PersistentCalls:
       m_Calls: []
