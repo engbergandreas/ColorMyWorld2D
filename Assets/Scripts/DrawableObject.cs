@@ -67,7 +67,7 @@ public class DrawableObject : ColorableObject
     /// <param name="hitPoint"></param>
     /// <param name="color"></param>
     /// <param name="_cam"></param>
-    public void ColorTarget(Vector3 hitPoint, Color color, Camera _cam, Texture2D mask)
+    public Vector2Int ColorTarget(Vector3 hitPoint, Color color, Camera _cam)
     {
         Vector3 planeMin = _cam.WorldToScreenPoint(spriteRenderer.bounds.min);
         Vector3 planeMax = _cam.WorldToScreenPoint(spriteRenderer.bounds.max);
@@ -78,16 +78,10 @@ public class DrawableObject : ColorableObject
         int xPoint = Mathf.RoundToInt(xProportion * drawableTexture.width);
         int yPoint = Mathf.RoundToInt(yProportion * drawableTexture.height);
 
-        ColorArea(xPoint, yPoint, color, mask);
+        //ColorArea(xPoint, yPoint, color, mask);
         //Debug.Log(CalculateColorFraction());
-        if (CalculateColorFraction() >= threshold) //very inefficient to calculate fraction every time we shoot at target
-        {
-            FullyColored();
-        }
-        else
-        {
-            OnPartiallyColored();
-        }
+        
+        return new Vector2Int(xPoint, yPoint);
     }
     /// <summary>
     /// What happens when the obj has been fully colored 
@@ -144,12 +138,20 @@ public class DrawableObject : ColorableObject
                 drawableTexture.SetPixel(i, j, Color.Lerp(currentColor, color, 0.5f) * maskColor);
             }
         }
+        drawableTexture.Apply();
     }
 
-    public void ApplySplatter()
+    public void ApplySplatter(Vector2Int texCoords, Texture2D mask, Color color)
     {
-        drawableTexture.Apply();
-
+        ColorArea(texCoords.x, texCoords.y, color, mask);
+        if (CalculateColorFraction() >= threshold) //very inefficient to calculate fraction every time we shoot at target
+        {
+            FullyColored();
+        }
+        else
+        {
+            OnPartiallyColored();
+        }
     }
 
     /// <summary>

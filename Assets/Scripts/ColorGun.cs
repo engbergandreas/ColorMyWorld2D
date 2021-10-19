@@ -154,11 +154,11 @@ public class ColorGun : MonoBehaviour
     {
         fireTimer = 1 / fireRate;
 
-        var obj = Instantiate(colorblob, fireGunPosition.position, Quaternion.identity);
-        obj.GetComponent<ColorBlobProjectile>().MoveTowardsTarget(mouseHitPoint, objmousehit, color);
-
         Vector3 mouseHitPointScreenCoords = _cam.WorldToScreenPoint(mouseHitPoint);
-        objmousehit.ColorTarget(mouseHitPointScreenCoords, color, _cam, GetRandomSplatterMask());
+        Vector2Int textureHitPoint = objmousehit.ColorTarget(mouseHitPointScreenCoords, color, _cam);
+
+        var obj = Instantiate(colorblob, fireGunPosition.position, Quaternion.identity);
+        obj.GetComponent<ColorBlobProjectile>().MoveTowardsTarget(mouseHitPoint, objmousehit, color, textureHitPoint, GetRandomSplatterMask());
     }
 
     /// <summary>

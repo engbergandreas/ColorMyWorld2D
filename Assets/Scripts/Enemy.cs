@@ -26,7 +26,10 @@ public class Enemy : DrawableObject
     protected override void FullyColored()
     {
         base.FullyColored();
-        Destroy(gameObject); //TODO: enemy death animation or other thing
+        //Destroy(gameObject); //TODO: enemy death animation or other thing
+        transform.Translate(new Vector3(-3000, -3000, 0));
+        Destroy(gameObject, 2.0f);
+        
     }
     
     private void GoToNextPatrolPoint()
