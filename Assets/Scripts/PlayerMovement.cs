@@ -11,9 +11,8 @@ public class PlayerMovement : MonoBehaviour
 
     private CircleCollider2D col;
 
-    private Rigidbody2D rb;
-    private bool onLadder = false;
-
+    private Rigidbody2D rb, platformRb;
+    private bool onLadder = false, onPlatform = false;
     private int layerMask;
 
     //private Actions playerActions;
@@ -52,7 +51,10 @@ public class PlayerMovement : MonoBehaviour
         if(onLadder)
         {
             rb.velocity = new Vector2(rb.velocity.x, movementdir.y * movementSpeed * Time.deltaTime);
-
+        }
+        if(onPlatform)
+        {
+            rb.velocity += platformRb.velocity;
         }
     }
     //TODO: better movement controls
@@ -90,6 +92,19 @@ public class PlayerMovement : MonoBehaviour
         if (other.transform.tag != "Player")
         {
             animator.SetBool("IsJumping", false);
+        }
+        if (other.transform.tag == "Platform")
+        {
+            platformRb = other.transform.GetComponent<Rigidbody2D>();
+            onPlatform = true;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if(collision.transform.tag == "Platform")
+        {
+            onPlatform = false;
+            platformRb = null;
         }
     }
 
