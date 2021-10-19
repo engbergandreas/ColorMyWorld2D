@@ -8,6 +8,7 @@ public class DoorButton : MonoBehaviour
 {
 
     public float timeUntilClosed = 5;
+    public bool playSound = true, alwaysOpen = false;
 
     public GameObject closedDoor, openDoor;
 
@@ -28,14 +29,19 @@ public class DoorButton : MonoBehaviour
 
     private void Update()
     {
+        if (alwaysOpen)
+            return;
+
         if (open)
         {
             timer -= Time.deltaTime;
-            float pitchMixerRatio = 1.0f - ((timer - (timeUntilClosed / 3.0f)) / timeUntilClosed);
-            pitchMixerRatio = Mathf.Clamp(pitchMixerRatio, 0.4f, 1.1f);
-            audioSource.pitch = pitchMixerRatio;
-            audioMixer.SetFloat("MixerPitch", 1.0f / pitchMixerRatio);
-
+            if (playSound)
+            {
+                float pitchMixerRatio = 1.0f - ((timer - (timeUntilClosed / 3.0f)) / timeUntilClosed);
+                pitchMixerRatio = Mathf.Clamp(pitchMixerRatio, 0.4f, 1.1f);
+                audioSource.pitch = pitchMixerRatio;
+                audioMixer.SetFloat("MixerPitch", 1.0f / pitchMixerRatio);
+            }
             if (timer <= 0)
             {
                 CloseDoor();
@@ -55,14 +61,16 @@ public class DoorButton : MonoBehaviour
     {
         WalkThrough(true);
         timer = timeUntilClosed;
-        audioSource.Play();
+        if(playSound)
+            audioSource.Play();
     }
     
     public void CloseDoor()
     {
         WalkThrough(false);
         button.ResetToOriginal();
-        audioSource.Stop();
+        if (playSound)
+            audioSource.Stop();
     }
 
     public void WalkThrough(bool status)
