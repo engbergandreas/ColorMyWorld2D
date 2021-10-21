@@ -14,16 +14,17 @@ public class DoorButton : MonoBehaviour
 
     public DrawableObject button;
 
-    private AudioSource audioSource;
+    public AudioSource audioSource1, audioSource2;
+    
     public AudioMixer audioMixer;
     
-    private bool open = false;
+    private bool open = false, warningSoundPlayed = false;
     private float timer = 0;
+
 
     private void Start()
     {
         button._event.AddListener(OnFullyColoredButton);
-        audioSource = GetComponent<AudioSource>();
         CloseDoor();
     }
 
@@ -39,8 +40,13 @@ public class DoorButton : MonoBehaviour
             {
                 float pitchMixerRatio = 1.0f - ((timer - (timeUntilClosed / 3.0f)) / timeUntilClosed);
                 pitchMixerRatio = Mathf.Clamp(pitchMixerRatio, 0.4f, 1.1f);
-                audioSource.pitch = pitchMixerRatio;
+                audioSource1.pitch = pitchMixerRatio;
                 audioMixer.SetFloat("MixerPitch", 1.0f / pitchMixerRatio);
+            }
+            if(timer <= 5.0f && !warningSoundPlayed)
+            {
+                audioSource2.Play();
+                warningSoundPlayed = true;
             }
             if (timer <= 0)
             {
@@ -61,8 +67,9 @@ public class DoorButton : MonoBehaviour
     {
         WalkThrough(true);
         timer = timeUntilClosed;
-        if(playSound)
-            audioSource.Play();
+        warningSoundPlayed = false;
+        if (playSound)
+            audioSource1.Play();
     }
     
     public void CloseDoor()
@@ -70,7 +77,7 @@ public class DoorButton : MonoBehaviour
         WalkThrough(false);
         button.ResetToOriginal();
         if (playSound)
-            audioSource.Stop();
+            audioSource1.Stop();
     }
 
     public void WalkThrough(bool status)
