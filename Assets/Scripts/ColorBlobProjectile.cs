@@ -10,16 +10,20 @@ public class ColorBlobProjectile : MonoBehaviour
     private float speed = 10.0f;
     private ParticleSystem ps;
     private SpriteRenderer _renderer;
-    private bool moveWithFrequency = true;
+    private bool moveWithFrequency = true, keepMoving = true;
 
     private Vector2Int textureCoords;
     private Texture2D mask;
     private Color textureColor;
 
+    private Vector3 direction;
+    private Rigidbody2D rb;
+
     private void Awake()
     {
         ps = GetComponent<ParticleSystem>();
         _renderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
         Destroy(gameObject, 5.0f);
     }
     public void MoveTowardsTarget(Vector3 _target, DrawableObject _objectToColor, Color _color, Vector2Int textureHitPoint, Texture2D _mask)
@@ -32,6 +36,7 @@ public class ColorBlobProjectile : MonoBehaviour
         textureCoords = textureHitPoint;
         mask = _mask;
         textureColor = _color;
+
         if(_objectToColor.GetComponent<Enemy>())
             _objectToColor._event.AddListener(EnemyHasDied);
     }
@@ -41,37 +46,32 @@ public class ColorBlobProjectile : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
-        Vector3 direction = target - transform.position;
+        direction = target - transform.position;
 
-        if (moveWithFrequency)
-            direction.y += Mathf.Sin(Time.time * frequency) * amplitude;
-
-        if (direction.magnitude <= 0.01f)
-        {
+        if (direction.sqrMagnitude < 0.1f && keepMoving)
             UpdateTargetPosition();
-            return;
-        }
+    }
 
-        transform.Translate(direction.normalized * speed * Time.deltaTime);
-
+    private void FixedUpdate()
+    {   
+        if(keepMoving)
+            rb.velocity = direction.normalized * speed;
     }
 
     private void UpdateTargetPosition()
     {
         target = objectToColor.transform.position;
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.GetComponent<DrawableObject>() == objectToColor)
         {
             objectToColor.ApplySplatter(textureCoords, mask, textureColor);
-            moveWithFrequency = false;
             ps.Play();
+            moveWithFrequency = false;
+            keepMoving = false;
             _renderer.enabled = false;
             GetComponent<CircleCollider2D>().enabled = false;
             Destroy(gameObject, 2.0f);
