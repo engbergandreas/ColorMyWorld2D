@@ -14,13 +14,18 @@ public class EnemyThrower : MonoBehaviour
     public float timeBetweenAttacks = 5.0f;
     public float projectileSpeed = 10.0f;
     private float timeSinceLastAttack = 0;
+    private bool inVision = false;
 
-    //private bool VisionCheck()
-    //{
-    //    var hit = Physics2D.BoxCast(firePoint.position, new Vector2(2.0f, 6.0f), 0, Vector2.left, 25.0f, LayerMask.GetMask("Player"));
-    //    return false;
-    //}
-    
+    private void Start()
+    {
+        InvokeRepeating("VisionCheck", 1.0f, 0.1f);
+    }
+
+    private void VisionCheck()
+    {
+        inVision = Physics2D.BoxCast(firePoint.position, new Vector2(2.0f, 7.0f), 0, Vector2.left, 30.0f, LayerMask.GetMask("Player"));
+    }
+
     private float ComputeThrowAngle()
     {
         float v = projectileSpeed;
@@ -66,9 +71,11 @@ public class EnemyThrower : MonoBehaviour
     {
         if(timeSinceLastAttack <= 0)
         {
-            StartCoroutine("ThrowObject");
-            timeSinceLastAttack = timeBetweenAttacks;
-
+            if (inVision)
+            {
+                StartCoroutine("ThrowObject");
+                timeSinceLastAttack = timeBetweenAttacks;
+            }
         }
         else
         {
