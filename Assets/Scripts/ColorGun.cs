@@ -21,7 +21,7 @@ public class ColorGun : MonoBehaviour
 
     private LineRenderer lr;
 
-    private bool hasRed = false, hasGreen = false, hasBlue = false;
+    private bool canFireGun = false, hasRed = false, hasGreen = false, hasBlue = false;
 
     private void Awake()
     {
@@ -120,7 +120,7 @@ public class ColorGun : MonoBehaviour
             lr.endColor = Color.cyan;
             
             //Can we fire gun?
-            if (fireTimer <= 0)
+            if (fireTimer <= 0 && canFireGun)
             {
                 if (continiousFire && Input.GetMouseButton(0)) //can hold down mouse
                     FireGun(objmousehit, mouseHitPoint);
@@ -253,6 +253,7 @@ public class ColorGun : MonoBehaviour
   
     public void PickUpColor(RGBChannel color)
     {
+        canFireGun = true;
         switch (color)
         {
             case RGBChannel.Red:
