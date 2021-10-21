@@ -53,6 +53,7 @@ public class ColorCloud : DrawableObject
             PointSystem.Instance.AddPoints(points);
             canGivePoints = false;
             isShrinking = false;
+            ShowTrueColor();
             //Destroy(gameObject, 5);
 
         }
