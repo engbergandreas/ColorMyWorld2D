@@ -12,7 +12,7 @@ public class EnemyThrower : MonoBehaviour
     public Transform firePoint;
 
     public float timeBetweenAttacks = 5.0f;
-    public float projectileSpeed = 10.0f;
+    public float projectileSpeed = 10.0f; //determine also how far away the target can be from origin
     private float timeSinceLastAttack = 0;
     private bool inVision = false;
 
@@ -20,18 +20,24 @@ public class EnemyThrower : MonoBehaviour
     {
         InvokeRepeating("VisionCheck", 1.0f, 0.1f);
     }
-
+    /// <summary>
+    /// Checks if the player is on the left side of the enemy by boxcasting
+    /// </summary>
     private void VisionCheck()
     {
         inVision = Physics2D.BoxCast(firePoint.position, new Vector2(2.0f, 7.0f), 0, Vector2.left, 30.0f, LayerMask.GetMask("Player"));
     }
 
+    /// <summary>
+    /// Computes throwing angle alpha if possible using the given velocity v
+    /// </summary>
+    /// <returns></returns>
     private float ComputeThrowAngle()
     {
         float v = projectileSpeed;
         float g = Physics2D.gravity.y;
         Vector3 target = Player.Instance.transform.position;
-        Vector3 origin = transform.position;
+        Vector3 origin = firePoint.position;
         float x = origin.x - target.x;
         float y = origin.y - target.y;
 
@@ -46,6 +52,7 @@ public class EnemyThrower : MonoBehaviour
         float a1 = Mathf.Atan2(v * v + sqrt, (g * x)); //lob
         float a2 = Mathf.Atan2(v * v - sqrt, (g * x)); //direct
 
+        //lobs if the y - value between enemy and player is more than x
         return Mathf.Abs(y) > 3.0f ? a1 : a2;
     }
 
@@ -55,7 +62,7 @@ public class EnemyThrower : MonoBehaviour
         if (angle != NOT_FOUND)
         {
             animator.SetTrigger("Shoot");
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.5f); //hack for animation to work properly
 
             var obj = Instantiate(objTothrow, firePoint.position, Quaternion.identity, transform);
             Rigidbody2D rb = obj.GetComponent<Rigidbody2D>();
