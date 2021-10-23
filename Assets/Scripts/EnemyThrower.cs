@@ -13,6 +13,7 @@ public class EnemyThrower : MonoBehaviour
 
     public float timeBetweenAttacks = 5.0f;
     public float projectileSpeed = 10.0f; //determine also how far away the target can be from origin
+    public bool CanOnlyLob = false;
     private float timeSinceLastAttack = 0;
     private bool inVision = false;
 
@@ -25,7 +26,7 @@ public class EnemyThrower : MonoBehaviour
     /// </summary>
     private void VisionCheck()
     {
-        inVision = Physics2D.BoxCast(firePoint.position, new Vector2(2.0f, 7.0f), 0, Vector2.left, 30.0f, LayerMask.GetMask("Player"));
+        inVision = Physics2D.BoxCast(firePoint.position, new Vector2(3.0f, 8.0f), 0, Vector2.left, 30.0f, LayerMask.GetMask("Player"));
     }
 
     /// <summary>
@@ -53,7 +54,10 @@ public class EnemyThrower : MonoBehaviour
         float a2 = Mathf.Atan2(v * v - sqrt, (g * x)); //direct
 
         //lobs if the y - value between enemy and player is more than x
-        return Mathf.Abs(y) > 3.0f ? a1 : a2;
+        if (CanOnlyLob)
+            return a1;
+        else 
+            return Mathf.Abs(y) > 3.0f ? a1 : a2;
     }
 
     private IEnumerator ThrowObject()
