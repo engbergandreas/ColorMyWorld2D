@@ -19,6 +19,7 @@ public class ColorCloud : DrawableObject
         gameObject.SetActive(false);
     }
 
+  
 
     protected override void Start()
     {
@@ -26,6 +27,8 @@ public class ColorCloud : DrawableObject
         elapsedTime = 0.0f;
         startvalue = transform.localScale;
         isShrinking = true;
+        OnChangedColorGun(ColorGun.Instance.color);
+
     }
 
     private void Update()
@@ -54,8 +57,10 @@ public class ColorCloud : DrawableObject
             canGivePoints = false;
             isShrinking = false;
             ShowTrueColor();
+            staticColor = true;
             //Destroy(gameObject, 5);
-
+            _event.Invoke();
+            PlaySoundEffect();
         }
     }
 }

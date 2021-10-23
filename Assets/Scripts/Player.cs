@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
 {
     public static Player Instance;
     public RGBChannel playerChannel;
+    public AudioClip respawnSoundEffect, deathSoundEffect, checkPointReachedSoundEffect;
+
 
     private Vector3 respawnPoint;
 
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
     public void SetSpawnPoint(Vector3 point)
     {
         respawnPoint = point;
+        SoundEffectManager.instance.PlaySoundEffect(checkPointReachedSoundEffect);
         Debug.Log("Update spawnpoint");
     }
 
@@ -37,6 +40,7 @@ public class Player : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         GetComponent<CircleCollider2D>().enabled = false;
         GetComponent<Animator>().SetTrigger("Disappear");
+        SoundEffectManager.instance.PlaySoundEffect(deathSoundEffect);
         Invoke("Kill", 3.0f);
 
     }
@@ -47,6 +51,7 @@ public class Player : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         GetComponent<CircleCollider2D>().enabled = false;
         GetComponent<Animator>().SetTrigger("Disappear");
+        SoundEffectManager.instance.PlaySoundEffect(deathSoundEffect);
         Invoke("Kill", 3.0f);
     }
 
@@ -58,6 +63,7 @@ public class Player : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = true;
         GetComponent<CircleCollider2D>().enabled = true;
         GetComponent<Animator>().SetTrigger("Appear");
+        SoundEffectManager.instance.PlaySoundEffect(respawnSoundEffect);
         Debug.Log("TODO: Remove life");
     }
 }

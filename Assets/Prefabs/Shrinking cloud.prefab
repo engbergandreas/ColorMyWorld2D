@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4828275408138808691}
   - component: {fileID: 4828275408138808701}
   - component: {fileID: 4828275408138808690}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,6 +345,7 @@ MonoBehaviour:
   colorIcon: {fileID: 3949936462433042739}
   threshold: 0.25
   textureSizeMultiplier: 2
+  soundEffect: {fileID: 8300000, guid: 57432ae0ca0471646badfd68b4fdb420, type: 3}
   _event:
     m_PersistentCalls:
       m_Calls: []
@@ -359,7 +360,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.0038033128, y: 0.009452999}

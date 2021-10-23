@@ -8,6 +8,7 @@ public class EnemyCharger : MonoBehaviour
     public float force = 2;
 
     public Animator animator;
+    [SerializeField] private AudioSource audioSource;
 
     private Rigidbody2D rb;    
 
@@ -43,11 +44,14 @@ public class EnemyCharger : MonoBehaviour
         Vector2 vel = collision.relativeVelocity;
         if(vel.x < 0)
         {
+            audioSource.Play();
             animator.SetTrigger("RightCollision");
         }
         else if(vel.x > 0 )
         {
+            audioSource.Play();
             animator.SetTrigger("LeftCollision");
         }
+
     }
 }

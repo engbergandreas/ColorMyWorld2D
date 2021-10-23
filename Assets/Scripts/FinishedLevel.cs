@@ -5,9 +5,14 @@ using UnityEngine;
 public class FinishedLevel : MonoBehaviour
 {
     public Transform teleportTo;
+    public AudioSource audioSource;
+    public AudioClip audioClip;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        collision.transform.position = teleportTo.position;
+        collision.transform.root.position = teleportTo.position;
+        audioSource.clip = audioClip;
+        audioSource.Play();
+        //collision.transform.position = teleportTo.position;
     }
 }

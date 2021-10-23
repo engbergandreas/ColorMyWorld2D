@@ -6,6 +6,7 @@ public class WalkableSurface : DrawableObject
 {
     //private MeshCollider col;
     private BoxCollider2D col;
+    private bool canTrigger = true;
 
     protected override void Start()
     {
@@ -16,16 +17,24 @@ public class WalkableSurface : DrawableObject
 
     protected override void FullyColored()
     {
-        col.isTrigger = false;
-        staticColor = true;
-        ShowTrueColor();
-        _event.Invoke();
+        if (canTrigger)
+        {
+            col.isTrigger = false;
+            staticColor = true;
+            canTrigger = false;
+            ShowTrueColor();
+            _event.Invoke();
+            PlaySoundEffect();
+        }
     }
 
     protected override void OnPartiallyColored()
     {
-        col.isTrigger = true;
-        staticColor = false;
-        ShowRGBColor();
+        if (canTrigger)
+        {
+            col.isTrigger = true;
+            staticColor = false;
+            ShowRGBColor();
+        }
     }
 }

@@ -130,6 +130,7 @@ MonoBehaviour:
   colorIcon: {fileID: 7972423336035075786}
   threshold: 0.3
   textureSizeMultiplier: 2
+  soundEffect: {fileID: 8300000, guid: 57432ae0ca0471646badfd68b4fdb420, type: 3}
   _event:
     m_PersistentCalls:
       m_Calls: []

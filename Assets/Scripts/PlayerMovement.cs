@@ -9,6 +9,8 @@ public class PlayerMovement : MonoBehaviour
     public Animator animator;
     public Transform groundCheck;
 
+    public AudioClip jumpSoundEffect;
+    public AudioSource audioSource;
     private CircleCollider2D col;
 
     private Rigidbody2D rb, platformRb;
@@ -63,6 +65,15 @@ public class PlayerMovement : MonoBehaviour
         movementdir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
         animator.SetFloat("Speed", Mathf.Abs(movementdir.x));
+        if (absX > 0 && !animator.GetBool("IsJumping"))
+        {
+            if(!audioSource.isPlaying)
+                audioSource.Play();
+        }
+        else
+        {
+            audioSource.Stop();
+        }
 
         //flips the character in the direction it is running
         if (movementdir.x > 0 && !facingRight)
@@ -75,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
         {
             rb.AddForce(Vector3.up * jumpStrength, ForceMode2D.Impulse);
             animator.SetBool("IsJumping", true);
+            SoundEffectManager.instance.PlaySoundEffect(jumpSoundEffect);
         }
     }
     

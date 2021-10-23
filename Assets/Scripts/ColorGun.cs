@@ -12,6 +12,7 @@ public class ColorGun : MonoBehaviour
     public Image crosshair;
     public Transform fireGunPosition;
     public GameObject colorblob;
+    public AudioClip fireGunSoundEffect;
     public List<Texture2D> maskList;
     public UnityEvent<RGBChannel> rgbChannelEvent;
     public UnityEvent<Color> colorChannelEvent;
@@ -77,8 +78,8 @@ public class ColorGun : MonoBehaviour
     {
         //Set crosshair alpha 
         Color c = crosshair.color;
-        c.a = 0.2f;
-        crosshair.color = c;
+        c.a = 0.4f;
+        crosshair.color = new Color(1.0f, 0.64f, 0);
         crosshair.rectTransform.eulerAngles = new Vector3(0, 0, 0);
 
         //Reset line renderer
@@ -142,7 +143,7 @@ public class ColorGun : MonoBehaviour
         if(objmousehit)
         {
             c.a = 1.0f;
-            crosshair.color = c;
+            crosshair.color = color;
 
             float deg = 15.0f;
             float speed = 4.0f;
@@ -159,6 +160,7 @@ public class ColorGun : MonoBehaviour
 
         var obj = Instantiate(colorblob, fireGunPosition.position, Quaternion.identity);
         obj.GetComponent<ColorBlobProjectile>().MoveTowardsTarget(mouseHitPoint, objmousehit, color, textureHitPoint, GetRandomSplatterMask());
+        SoundEffectManager.instance.PlayRepeatingSoundEffect(fireGunSoundEffect);
     }
 
     /// <summary>
@@ -231,7 +233,7 @@ public class ColorGun : MonoBehaviour
         //{
         //    obj.OnChannelChange(channel);
         //}
-        crosshair.color = color;
+        //crosshair.color = color;
         rgbChannelEvent.Invoke(channel);
         colorChannelEvent.Invoke(color);
     }

@@ -15,10 +15,11 @@ public class DrawableObject : ColorableObject
     public float threshold = 0.70f;
 
     public int textureSizeMultiplier = 1;
+    public AudioClip soundEffect;
     /// <summary>
     /// Should this object fire any events when completely drawn
     /// </summary>
-    public UnityEvent _event; 
+    public UnityEvent _event;
 
     protected bool canGivePoints = true;
     private int textureSize = 64;
@@ -37,7 +38,7 @@ public class DrawableObject : ColorableObject
         drawableTexture = new Texture2D(textureSize, textureSize);
         drawableTexture.wrapMode = TextureWrapMode.Clamp;
 
-        if(colorIcon)
+        if (colorIcon)
             colorIcon.color = desiredColorasColor;
 
         //Set all pixels to grayscale value
@@ -60,6 +61,7 @@ public class DrawableObject : ColorableObject
             material.SetTexture("_PaintedTex", drawableTexture);
         }
     }
+
 
     /// <summary>
     /// Color target at hitpoint, with color: color
@@ -95,6 +97,7 @@ public class DrawableObject : ColorableObject
             ColorGun.Instance.colorChannelEvent.RemoveListener(OnChangedColorGun); //if it should stay the same color it is when accepted as correct
             staticColor = true;
             ShowTrueColor();
+            PlaySoundEffect();
         }
         _event.Invoke();
     }
@@ -103,6 +106,11 @@ public class DrawableObject : ColorableObject
 
     }
 
+    protected void PlaySoundEffect()
+    {
+        if(soundEffect)
+            SoundEffectManager.instance.PlaySoundEffect(soundEffect);
+    }
     /// <summary>
     /// Color an area around coordinate (x,y) with color: color
     /// </summary>
@@ -135,7 +143,7 @@ public class DrawableObject : ColorableObject
                     continue;
 
                 Color currentColor = drawableTexture.GetPixel(i, j);
-                drawableTexture.SetPixel(i, j, Color.Lerp(currentColor, color, 0.5f) * maskColor);
+                drawableTexture.SetPixel(i, j, Color.Lerp(currentColor, color, 0.75f) * maskColor);
             }
         }
         drawableTexture.Apply();

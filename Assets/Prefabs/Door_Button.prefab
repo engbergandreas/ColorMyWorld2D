@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 977410561265748715}
   - component: {fileID: 2111904579259272929}
   - component: {fileID: 645851166045747025}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CloseDoorTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,6 +74,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8809790105007237235}
+        m_TargetAssemblyTypeName: DoorButton, Assembly-CSharp
+        m_MethodName: PlaySoundEffect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onTriggeredVector:
     m_PersistentCalls:
       m_Calls: []
@@ -116,7 +128,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8809790104672703592}
   - component: {fileID: 8809790104672703595}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -200,7 +212,7 @@ GameObject:
   - component: {fileID: 8809790105007237235}
   - component: {fileID: 8809790105007237245}
   - component: {fileID: 599649107467835888}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,6 +257,7 @@ MonoBehaviour:
   audioSource1: {fileID: 8809790105007237245}
   audioSource2: {fileID: 599649107467835888}
   audioMixer: {fileID: 24100000, guid: a1bc3de2ba6411845b3a4f7c06522c4f, type: 2}
+  doorClosedSoundEffect: {fileID: 8300000, guid: 642ebdc28b64aa64098fe1e194895512, type: 3}
 --- !u!82 &8809790105007237245
 AudioSource:
   m_ObjectHideFlags: 0
@@ -447,7 +460,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8809790105089804639}
   - component: {fileID: 8809790105089804638}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +542,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8809790105447772044}
   - component: {fileID: 8809790105447772047}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -610,7 +623,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8809790105479033333}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -645,7 +658,7 @@ GameObject:
   - component: {fileID: 8809790105622115501}
   - component: {fileID: 8809790105622115502}
   - component: {fileID: 8809790105622115503}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -763,6 +776,7 @@ MonoBehaviour:
   colorIcon: {fileID: 1223549044536785145}
   threshold: 0.2
   textureSizeMultiplier: 1
+  soundEffect: {fileID: 0}
   _event:
     m_PersistentCalls:
       m_Calls: []
@@ -775,7 +789,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8809790105678147469}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door_Open
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,7 +822,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8809790106224268711}
   - component: {fileID: 8809790106224268710}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -890,7 +904,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8809790106381098614}
   - component: {fileID: 8809790106381098609}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door_Closed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1001,6 +1015,10 @@ PrefabInstance:
     - target: {fileID: 4545662680896440175, guid: f2ffe8482d5725a4ebddd28ecf8280d6, type: 3}
       propertyPath: m_Name
       value: Icon
+      objectReference: {fileID: 0}
+    - target: {fileID: 4545662680896440175, guid: f2ffe8482d5725a4ebddd28ecf8280d6, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2ffe8482d5725a4ebddd28ecf8280d6, type: 3}

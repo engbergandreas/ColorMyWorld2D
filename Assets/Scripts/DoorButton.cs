@@ -17,6 +17,8 @@ public class DoorButton : MonoBehaviour
     public AudioSource audioSource1, audioSource2;
     
     public AudioMixer audioMixer;
+
+    public AudioClip doorClosedSoundEffect;
     
     private bool open = false, warningSoundPlayed = false;
     private float timer = 0;
@@ -25,6 +27,8 @@ public class DoorButton : MonoBehaviour
     private void Start()
     {
         button._event.AddListener(OnFullyColoredButton);
+        if (!alwaysOpen)
+            Player.Instance.deathEvent.AddListener(CloseDoor);
         CloseDoor();
     }
 
@@ -50,6 +54,7 @@ public class DoorButton : MonoBehaviour
             }
             if (timer <= 0)
             {
+                PlaySoundEffect();
                 CloseDoor();
             }
         }
@@ -63,6 +68,10 @@ public class DoorButton : MonoBehaviour
         OpenDoor();
     }
 
+    public void PlaySoundEffect()
+    {
+        SoundEffectManager.instance.PlaySoundEffect(doorClosedSoundEffect);
+    }
     private void OpenDoor()
     {
         WalkThrough(true);
@@ -71,13 +80,15 @@ public class DoorButton : MonoBehaviour
         if (playSound)
             audioSource1.Play();
     }
-    
+
     public void CloseDoor()
     {
         WalkThrough(false);
         button.ResetToOriginal();
         if (playSound)
+        {
             audioSource1.Stop();
+        }
     }
 
     public void WalkThrough(bool status)
