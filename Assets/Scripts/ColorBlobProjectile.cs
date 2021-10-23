@@ -50,7 +50,7 @@ public class ColorBlobProjectile : MonoBehaviour
     {
         direction = target - transform.position;
 
-        if (direction.sqrMagnitude < 0.1f && keepMoving)
+        if (direction.magnitude < 0.1f && keepMoving)
             UpdateTargetPosition();
     }
 
@@ -73,6 +73,7 @@ public class ColorBlobProjectile : MonoBehaviour
             moveWithFrequency = false;
             keepMoving = false;
             _renderer.enabled = false;
+            rb.velocity /= 2.5f; // rb.velocity / 2.0f;
             GetComponent<CircleCollider2D>().enabled = false;
             Destroy(gameObject, 2.0f);
         }
