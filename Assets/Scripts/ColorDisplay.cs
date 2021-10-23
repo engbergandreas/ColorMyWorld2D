@@ -69,8 +69,5 @@ public class ColorDisplay : MonoBehaviour
             default:
                 break;
         }
-
-
     }
-
 }
