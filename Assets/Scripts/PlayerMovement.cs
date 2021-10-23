@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     public float jumpStrength = 5.0f;
     public Animator animator;
     public Transform groundCheck;
-
     public AudioClip jumpSoundEffect;
     public AudioSource audioSource;
     private CircleCollider2D col;
@@ -33,13 +32,14 @@ public class PlayerMovement : MonoBehaviour
         if (!col)
             col = GetComponentInChildren<CircleCollider2D>();
 
-        layerMask = ~LayerMask.GetMask("Player");
+        layerMask = ~LayerMask.GetMask("Player", "Button");
     }
 
     public void OnEnterLadder()
     {
         onLadder = true;
         rb.gravityScale = 0;
+
     }
     public void OnExitLadder()
     {
@@ -53,8 +53,13 @@ public class PlayerMovement : MonoBehaviour
         if(onLadder)
         {
             rb.velocity = new Vector2(rb.velocity.x, movementdir.y * movementSpeed * Time.deltaTime);
+
+            //If we are moving up or down eg a ladder remove jumping animation
+            if(Mathf.Abs(rb.velocity.y) > 0.5f)
+                animator.SetBool("IsJumping", false);
+
         }
-        if(onPlatform)
+        if (onPlatform)
         {
             rb.velocity += platformRb.velocity;
         }
@@ -63,8 +68,10 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         movementdir = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        float absX = Mathf.Abs(movementdir.x);
 
-        animator.SetFloat("Speed", Mathf.Abs(movementdir.x));
+        animator.SetFloat("Speed", absX);
+
         if (absX > 0 && !animator.GetBool("IsJumping"))
         {
             if(!audioSource.isPlaying)
@@ -94,9 +101,11 @@ public class PlayerMovement : MonoBehaviour
     {
         facingRight = !facingRight;
 
-        Vector3 scale = transform.localScale;
-        scale.x *= -1;
-        transform.localScale = scale;
+        transform.eulerAngles += new Vector3(0, 180, 0);
+
+        //Vector3 scale = transform.localScale;
+        //scale.x *= -1;
+        //transform.localScale = scale;
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -122,6 +131,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     { 
-        return Physics2D.OverlapCircle(groundCheck.position, col.radius * 1.1f, layerMask);
+        var collision = Physics2D.OverlapCircle(groundCheck.position, col.radius * 1.1f, layerMask);
+        return (collision && !collision.isTrigger);
     }
 }
