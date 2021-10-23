@@ -99,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunColor: 0
   KillPlayer: 0
+  fireEventOnce: 1
   onTriggered:
     m_PersistentCalls:
       m_Calls:
