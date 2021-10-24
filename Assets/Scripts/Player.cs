@@ -31,7 +31,7 @@ public class Player : MonoBehaviour
     public void SetSpawnPoint(Vector3 point)
     {
         respawnPoint = point;
-        SoundEffectManager.instance.PlaySoundEffect(checkPointReachedSoundEffect);
+        SoundEffectManager.instance.PlaySoundEffect(checkPointReachedSoundEffect, 0.2f);
         Debug.Log("Update spawnpoint");
     }
 

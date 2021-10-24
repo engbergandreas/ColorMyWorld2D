@@ -12,30 +12,30 @@ public class SoundEffectManager : MonoBehaviour
         instance = this;
     }
 
-    public void PlaySoundEffect(AudioClip clip)
+    public void PlaySoundEffect(AudioClip clip, float volume = 1.0f)
     {
         if (audioSource.isPlaying)
             PlaySecondSoundEffect(clip);
         else
         {
             audioSource.clip = clip;
-
+            audioSource.volume = volume;
             audioSource.Play();
         }
     }
 
-    public void PlayRepeatingSoundEffect(AudioClip clip)
+    public void PlayRepeatingSoundEffect(AudioClip clip, float volume = 1.0f)
     {
         repeatingAudioSource.clip = clip;
-
+        audioSource.volume = volume;
         repeatingAudioSource.Play();
     }
 
 
-    private void PlaySecondSoundEffect(AudioClip clip)
+    private void PlaySecondSoundEffect(AudioClip clip , float volume = 1.0f)
     {
         secondAudioSource.clip = clip;
-
+        audioSource.volume = volume;
         secondAudioSource.Play();
     }
 }
