@@ -12,7 +12,7 @@ public class ColorDisplay : MonoBehaviour
 
     private List<Color> pickedUpColors = new List<Color> { Color.red, Color.green, Color.blue }; //TODO change to actual picked up colors
     private List<Image> uiColors = new List<Image>(); //internal list of created ui colors
-    private int colorSpacing = 10;
+    private int colorSpacing = 15;
     private int colorCounter = 0;
     // Start is called before the first frame update
     void Start()
@@ -36,9 +36,10 @@ public class ColorDisplay : MonoBehaviour
         Image obj = Instantiate(prefab, _container);
         RectTransform objRecTransform = obj.GetComponent<RectTransform>();
         float prefabWidth = objRecTransform.rect.width;
-        objRecTransform.anchoredPosition = new Vector2(10 + prefabWidth / 2 + colorSpacing * index + prefabWidth * index, 0);
+        float offset = 10 + prefabWidth / 2 + colorSpacing * index;
+        objRecTransform.anchoredPosition = new Vector2(offset + prefabWidth * index, 0);
 
-        _color.a = 0.2f; //set alpha to 0.5
+        _color.a = 0.3f; //set alpha to 0.5
         obj.color = _color;
 
         int nr = index + 1;

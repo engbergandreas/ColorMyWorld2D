@@ -23,10 +23,14 @@ public class PointSystem : MonoBehaviour
         points += p;
         UpdateUIText();
     }
+    public int GetPoints()
+    {
+        return points;
+    }
 
     private void UpdateUIText()
     {
-        scoreText.SetText("Points: " + points);
+        scoreText.SetText("Score: " + points);
     }
 
     //private void Update()

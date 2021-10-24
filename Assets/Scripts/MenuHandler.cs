@@ -26,6 +26,7 @@ public class MenuHandler : MonoBehaviour
         Time.timeScale = 0;
         ui.enabled = false;
         menu.enabled = true;
+        Cursor.visible = true;
     }
     private void ResumeGame()
     {
@@ -33,7 +34,9 @@ public class MenuHandler : MonoBehaviour
         ui.enabled = true;
         menu.enabled = false;
         EventSystem.current.SetSelectedGameObject(null);
-        
+        Cursor.visible = false;
+
+
     }
 
     private void ToggleMenu()
