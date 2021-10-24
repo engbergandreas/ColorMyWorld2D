@@ -143,7 +143,7 @@ public class DrawableObject : ColorableObject
                     continue;
 
                 Color currentColor = drawableTexture.GetPixel(i, j);
-                drawableTexture.SetPixel(i, j, Color.Lerp(currentColor, color, 0.75f) * maskColor);
+                drawableTexture.SetPixel(i, j, Color.Lerp(currentColor, color, 0.8f) * maskColor);
             }
         }
         drawableTexture.Apply();
