@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         GetComponent<CircleCollider2D>().enabled = false;
         GetComponent<Animator>().SetTrigger("Disappear");
+        GetComponent<Animator>().SetBool("IsDead", true);
         SoundEffectManager.instance.PlaySoundEffect(deathSoundEffect);
         Invoke("Kill", 3.0f);
     }
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
         GetComponent<BoxCollider2D>().enabled = false;
         GetComponent<CircleCollider2D>().enabled = false;
         GetComponent<Animator>().SetTrigger("Disappear");
+        GetComponent<Animator>().SetBool("IsDead", true);
         SoundEffectManager.instance.PlaySoundEffect(deathSoundEffect);
         Invoke("Kill", 3.0f);
     }
@@ -65,6 +67,7 @@ public class Player : MonoBehaviour
         GetComponent<Rigidbody2D>().angularVelocity = 0;
         GetComponent<BoxCollider2D>().enabled = true;
         GetComponent<CircleCollider2D>().enabled = true;
+        GetComponent<Animator>().SetBool("IsDead", false);
         GetComponent<Animator>().SetTrigger("Appear");
         SoundEffectManager.instance.PlaySoundEffect(respawnSoundEffect);
         Debug.Log("TODO: Remove life");
